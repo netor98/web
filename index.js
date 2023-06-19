@@ -1,15 +1,44 @@
 //constante que guarda la librería http
 require("dotenv").config()
 const http = require("http")
+const fileSystem = require("fs")
 const exportFromAnother = require("./another")
-console.log({exportFromAnother})
+
 
 //Función que se ejecutará cuando el servidor escuche una petición
-function requestController() {
+function requestController(request, response) {
     //Lógica
-    console.log(exportFromAnother.name + " el papu")
-}
+    const url = request.url
+    const method = request.method
+    console.log({url, method})
 
+    if (method === "GET" && url === "/about"){
+        response.setHeader("Content-type", "text/html; charset=utf-8")
+        fileSystem.readFile("./public/about.html", function(err, file){
+            if (err){
+                console.log("error")
+            }
+            response.write(file)
+            response.end()
+        })
+    }
+    else if (method === "GET" && url ==="/inicio"){
+        response.setHeader("Content-type", "text/html; charset=utf-8")
+        fileSystem.readFile("./public/index.html", function(err, file){
+            if (err){
+                console.log("error")
+            }
+            response.write(file)
+            response.end()
+        })
+    }
+    else{
+        response.setHeader("Content-type", "text/html; charset=utf-8")
+        response.write("<body style='background-color:red'><h2>Página no encontrada :(</h2></body>")
+        response.end()
+    }
+
+}
 //Se crear un servidor a partir de la librería, y recibe como parámetro
 //la función que se ejecutara al recibir una request
 const server = http.createServer(requestController)
