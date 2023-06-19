@@ -22,7 +22,7 @@ function requestController(request, response) {
             response.end()
         })
     }
-    else if (method === "GET" && url ==="/inicio"){
+    else if (method === "GET" && url ==="/"){
         response.setHeader("Content-type", "text/html; charset=utf-8")
         fileSystem.readFile("./public/index.html", function(err, file){
             if (err){
